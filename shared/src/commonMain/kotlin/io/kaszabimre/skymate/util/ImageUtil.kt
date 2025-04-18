@@ -22,7 +22,7 @@ fun SkymateImageLoader(): ImageLoader {
 }
 
 @Suppress("CyclomaticComplexMethod")
-fun getWeatherIconUrl(code: Int): String {
+fun getWeatherIconUrl(code: Int, showLarge: Boolean = false): String {
     val icon = when (code) {
         0 -> "01d" // Clear sky
         1 -> "02d" // Mainly clear
@@ -49,5 +49,6 @@ fun getWeatherIconUrl(code: Int): String {
         else -> "01d" // Default fallback: clear sky
     }
 
-    return "https://openweathermap.org/img/wn/$icon@2x.png"
+    val size = if (showLarge) "4x" else "2x"
+    return "https://openweathermap.org/img/wn/$icon@$size.png"
 }

@@ -1,5 +1,6 @@
 package io.kaszabimre.skymate.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import coil3.compose.AsyncImage
 import io.kaszabimre.skymate.model.City
 import io.kaszabimre.skymate.model.ForecastDay
 import io.kaszabimre.skymate.model.Weather
+import io.kaszabimre.skymate.navigation.SkymateScreens
 import io.kaszabimre.skymate.util.SkymateImageLoader
 import io.kaszabimre.skymate.util.formatDate
 import io.kaszabimre.skymate.util.koinViewModel
@@ -69,6 +71,9 @@ fun HomeScreen(
                     onCitySelected = {
                         focusManager.clearFocus(force = true)
                         viewModel.onCitySelected(it)
+                        navHostController.navigate(
+                            SkymateScreens.DetailsScreen.createRoute(it.latitude, it.longitude)
+                        )
                     }
                 )
             }
@@ -158,11 +163,14 @@ fun ErrorText(message: String?) {
 }
 
 @Composable
-fun CurrentWeatherSection(weather: Weather) {
+fun CurrentWeatherSection(weather: Weather, onClick: () -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable {
+                onClick()
+            },
         elevation = CardDefaults.cardElevation()
     ) {
         Column(
@@ -183,7 +191,7 @@ fun CurrentWeatherSection(weather: Weather) {
             Spacer(Modifier.height(12.dp))
 
             AsyncImage(
-                model = weather.iconUrl,
+                model = weather.smallIconUrl,
                 imageLoader = SkymateImageLoader(),
                 contentDescription = "Weather Icon",
                 modifier = Modifier.size(72.dp)
@@ -240,7 +248,7 @@ fun ForecastSection(forecastDays: List<ForecastDay>) {
 }
 
 @Composable
-private fun InfoRow(label: String? = null, value: String) {
+internal fun InfoRow(label: String? = null, value: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween

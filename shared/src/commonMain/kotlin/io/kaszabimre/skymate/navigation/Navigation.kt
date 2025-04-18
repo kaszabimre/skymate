@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import io.kaszabimre.skymate.screen.DetailsScreen
 import io.kaszabimre.skymate.screen.HomeScreen
 import io.kaszabimre.skymate.theme.MyApplicationTheme
 
@@ -20,6 +21,7 @@ fun Navigation() {
                     HomeScreen(navHostController = navController)
                 }
                 composable(route = SkymateScreens.DetailsScreen.route) {
+                    DetailsScreen(navHostController = navController)
                 }
             }
         }

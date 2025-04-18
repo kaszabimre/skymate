@@ -10,6 +10,7 @@ data class Weather(
     val weatherCode: Int,
     val windSpeed: Double,
     val humidity: Double,
-    val iconUrl: String = getWeatherIconUrl(weatherCode),
+    val smallIconUrl: String = getWeatherIconUrl(weatherCode),
+    val largeIconUrl: String = getWeatherIconUrl(weatherCode, true),
     val weatherCondition: String = getWeatherCondition(weatherCode)
 )
