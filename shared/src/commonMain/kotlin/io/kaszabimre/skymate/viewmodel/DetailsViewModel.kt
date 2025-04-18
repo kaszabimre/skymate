@@ -2,7 +2,9 @@ package io.kaszabimre.skymate.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.kaszabimre.skymate.domain.WeatherAction
 import io.kaszabimre.skymate.domain.WeatherService
+import io.kaszabimre.skymate.domain.WeatherStore
 import io.kaszabimre.skymate.model.Weather
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,10 +14,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(
-    private val service: WeatherService
+    private val action: WeatherAction,
+    private val store: WeatherStore
 ) : ViewModel() {
 
-    val weather: Flow<Weather?> = service.selectedWeather()
+    val weather: Flow<Weather?> = store.selectedWeather()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -28,9 +31,9 @@ class DetailsViewModel(
             _isLoading.value = true
             _error.value = null
             try {
-                val city = service.searchResults().firstOrNull()
+                val city = store.searchResults().firstOrNull()
                     ?.firstOrNull { it.longitude == longitude && it.latitude == latitude } ?: return@launch
-                service.fetchSelectedWeather(city)
+                action.fetchSelectedWeather(city)
             } catch (@Suppress("SwallowedException", "TooGenericExceptionCaught") e: Exception) {
                 _error.value = "Failed to load weather details"
             } finally {

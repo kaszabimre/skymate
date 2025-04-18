@@ -2,7 +2,8 @@ package io.kaszabimre.skymate.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.kaszabimre.skymate.domain.WeatherService
+import io.kaszabimre.skymate.domain.WeatherAction
+import io.kaszabimre.skymate.domain.WeatherStore
 import io.kaszabimre.skymate.model.City
 import io.kaszabimre.skymate.model.Forecast
 import io.kaszabimre.skymate.model.Weather
@@ -24,7 +25,8 @@ private const val CHAR_LIMIT = 3
 
 @OptIn(kotlinx.coroutines.FlowPreview::class)
 class HomeViewModel(
-    private val service: WeatherService
+    private val action: WeatherAction,
+    store: WeatherStore
 ) : ViewModel() {
 
     private val _isDropdownExpanded = MutableStateFlow(false)
@@ -34,23 +36,21 @@ class HomeViewModel(
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     init {
-        _searchQuery
-            .debounce(DELAY)
-            .distinctUntilChanged()
-            .onEach { query ->
-                if (query.length >= CHAR_LIMIT) {
-                    service.searchCity(query)
+        combine(_searchQuery, _isDropdownExpanded)
+            { query, expanded ->
+                if (query.length >= CHAR_LIMIT && expanded) {
+                    action.searchCity(query)
                 }
             }
             .launchIn(viewModelScope)
     }
 
     val uiState = combine(
-        service.currentWeather(),
-        service.forecast(),
-        service.isLoading(),
-        service.error(),
-        service.searchResults(),
+        store.currentWeather(),
+        store.forecast(),
+        store.isLoading(),
+        store.error(),
+        store.searchResults(),
     ) { weather, forecast, isLoading, error, searchResults ->
         HomeUiState(
             currentWeather = weather,
@@ -63,8 +63,8 @@ class HomeViewModel(
 
     fun onCitySelected(city: City) {
         viewModelScope.launch {
-            _searchQuery.value = city.name
             _isDropdownExpanded.value = false
+            _searchQuery.value = city.name
         }
     }
 
@@ -78,8 +78,8 @@ class HomeViewModel(
 
     fun onDeviceLocation(cords: CurrentLocation) {
         viewModelScope.launch {
-            service.fetchCurrentWeatherByCoordinates(cords)
-            service.fetchForecastByCoordinates(cords.latitude, cords.longitude)
+            action.fetchCurrentWeatherByCoordinates(cords)
+            action.fetchForecastByCoordinates(cords.latitude, cords.longitude)
         }
     }
 }

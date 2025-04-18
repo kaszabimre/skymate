@@ -33,6 +33,7 @@ koinCompose = "4.0.0"
 mockk = "1.13.17"
 statelyCommon = "2.1.0"
 junit = "4.13.2"
+turbine = "1.2.0"
 
 detekt = "1.23.7"
 
@@ -86,6 +87,7 @@ kotlin-test-common = { module = "org.jetbrains.kotlin:kotlin-test-common", versi
 kotlin-test-annotations-common = { module = "org.jetbrains.kotlin:kotlin-test-annotations-common", version.ref = "kotlin" }
 test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 test-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+test-turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [plugins]
