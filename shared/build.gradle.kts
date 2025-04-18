@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
 }
 
 kotlin {
@@ -15,7 +17,7 @@ kotlin {
             }
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,8 +30,47 @@ kotlin {
     }
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.koin.compose)
+            implementation(libs.koin.android)
+            implementation(libs.ktor.client.okhttp)
+        }
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            // Compose
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            implementation(libs.compose.navigation)
+            implementation(libs.compose.multiplatform.ui)
+
+            // Koin
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose.multiplatform)
+            implementation(libs.stately.common)
+
+            // Coil
+            implementation(libs.coil.compose.core)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.mp)
+
+            // Logging
+            implementation(libs.log.kermit)
+            implementation(libs.log.slf4j)
+
+            // DI
+            implementation(libs.koin.core)
+
+            // Network
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.logging)
+            implementation(libs.ktor.content.negotiation)
+            implementation(libs.ktor.serialization)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.ios)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -39,12 +80,18 @@ kotlin {
 
 android {
     namespace = "io.kaszabimre.skymate"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
+
     defaultConfig {
-        minSdk = 30
+        minSdk = libs.versions.minSdk.get().toInt()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+}
+
+dependencies {
+    // Detekt
+    detektPlugins(libs.detekt.formatting)
 }
