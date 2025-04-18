@@ -14,9 +14,12 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = libs.versions.versionCode.get().toInt()
         versionName = libs.versions.versionName.get()
+
+        buildConfigField("String", "BASE_PATH", "\"https://api.open-meteo.com/v1\"")
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -45,6 +46,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.compose.navigation)
             implementation(libs.compose.multiplatform.ui)
+            implementation(libs.kotlinx.date)
 
             // Koin
             implementation(libs.koin.core)
@@ -55,6 +57,7 @@ kotlin {
             implementation(libs.coil.compose.core)
             implementation(libs.coil.compose)
             implementation(libs.coil.mp)
+            implementation(libs.coil.network.ktor)
 
             // Logging
             implementation(libs.log.kermit)
@@ -88,6 +91,10 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        compose = true
+        buildConfig = true
     }
 }
 

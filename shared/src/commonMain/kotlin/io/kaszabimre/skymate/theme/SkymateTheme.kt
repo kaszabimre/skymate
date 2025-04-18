@@ -1,4 +1,4 @@
-package io.kaszabimre.skymate.android
+package io.kaszabimre.skymate.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
