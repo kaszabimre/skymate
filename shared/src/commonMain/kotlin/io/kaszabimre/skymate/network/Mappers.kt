@@ -31,3 +31,15 @@ fun ForecastResponse.toDomain(): Forecast = Forecast(
         )
     }
 )
+
+fun GeocodingResult.toDomain(): City = City(
+    name = name,
+    country = country,
+    latitude = latitude,
+    longitude = longitude
+)
+
+fun ReverseGeocodingResponse.toDomain(): City? =
+    results
+        ?.firstOrNull()
+        ?.toDomain()

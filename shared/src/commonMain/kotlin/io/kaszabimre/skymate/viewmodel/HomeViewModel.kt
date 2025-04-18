@@ -6,6 +6,7 @@ import io.kaszabimre.skymate.domain.WeatherService
 import io.kaszabimre.skymate.model.City
 import io.kaszabimre.skymate.model.Forecast
 import io.kaszabimre.skymate.model.Weather
+import io.kaszabimre.skymate.permission.CurrentLocation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -62,8 +63,6 @@ class HomeViewModel(
 
     fun onCitySelected(city: City) {
         viewModelScope.launch {
-            service.fetchCurrentWeather(city)
-            service.fetchForecast(city)
             _searchQuery.value = city.name
             _isDropdownExpanded.value = false
         }
@@ -75,6 +74,13 @@ class HomeViewModel(
 
     fun setDropdownExpanded(expanded: Boolean) {
         _isDropdownExpanded.value = expanded
+    }
+
+    fun onDeviceLocation(cords: CurrentLocation) {
+        viewModelScope.launch {
+            service.fetchCurrentWeatherByCoordinates(cords)
+            service.fetchForecastByCoordinates(cords.latitude, cords.longitude)
+        }
     }
 }
 

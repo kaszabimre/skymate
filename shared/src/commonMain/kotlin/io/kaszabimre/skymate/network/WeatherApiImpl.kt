@@ -9,6 +9,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 
 private const val COUNT_LIMIT = 5
+
 class WeatherApiImpl(private val httpClient: HttpClient) : WeatherApi {
 
     override suspend fun getCurrentWeather(latitude: Double, longitude: Double): CurrentWeatherResponse =
@@ -34,7 +35,7 @@ class WeatherApiImpl(private val httpClient: HttpClient) : WeatherApi {
 
     override suspend fun searchCity(query: String): List<CityResult> =
         withContext(Dispatchers.IO) {
-            httpClient.get(GEOCODING_BASE_URL) {
+            httpClient.get(GEOCODING_BASE_URL + "search") {
                 parameter("name", query)
                 parameter("count", COUNT_LIMIT)
                 parameter("language", "en")
@@ -42,8 +43,22 @@ class WeatherApiImpl(private val httpClient: HttpClient) : WeatherApi {
             }.body<SearchResponse>().results ?: emptyList()
         }
 
+    override suspend fun reverseGeocode(
+        latitude: Double,
+        longitude: Double,
+        language: String,
+        count: Int
+    ): ReverseGeocodingResponse = withContext(Dispatchers.IO) {
+        httpClient.get("https://nominatim.openstreetmap.org/reverse") {
+            parameter("lat", latitude)
+            parameter("lon", longitude)
+            parameter("format", "json")
+            parameter("accept-language", language)
+        }.body()
+    }
+
     companion object {
         private const val OPEN_METEO_BASE_URL = "https://api.open-meteo.com/v1/forecast"
-        private const val GEOCODING_BASE_URL = "https://geocoding-api.open-meteo.com/v1/search"
+        private const val GEOCODING_BASE_URL = "https://geocoding-api.open-meteo.com/v1/"
     }
 }

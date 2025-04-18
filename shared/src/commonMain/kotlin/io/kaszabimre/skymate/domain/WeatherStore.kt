@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface WeatherStore {
     fun currentWeather(): Flow<Weather?>
+    fun selectedWeather(): Flow<Weather?>
     fun forecast(): Flow<Forecast?>
     fun isLoading(): Flow<Boolean>
     fun error(): Flow<String?>

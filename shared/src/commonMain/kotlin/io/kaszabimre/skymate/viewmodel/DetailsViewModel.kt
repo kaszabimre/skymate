@@ -15,7 +15,7 @@ class DetailsViewModel(
     private val service: WeatherService
 ) : ViewModel() {
 
-    val weather: Flow<Weather?> = service.currentWeather()
+    val weather: Flow<Weather?> = service.selectedWeather()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -30,7 +30,7 @@ class DetailsViewModel(
             try {
                 val city = service.searchResults().firstOrNull()
                     ?.firstOrNull { it.longitude == longitude && it.latitude == latitude } ?: return@launch
-                service.fetchCurrentWeather(city)
+                service.fetchSelectedWeather(city)
             } catch (@Suppress("SwallowedException", "TooGenericExceptionCaught") e: Exception) {
                 _error.value = "Failed to load weather details"
             } finally {
