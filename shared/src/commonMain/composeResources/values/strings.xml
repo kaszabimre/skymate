@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">SkyMate</string>
+    <string name="weather_details">Weather Details</string>
+    <string name="back">Back</string>
+    <string name="search_city">Search City</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="humidity">Humidity</string>
+    <string name="condition">Condition</string>
+    <string name="high">High</string>
+    <string name="low">Low</string>
+    <string name="weather_icon">Weather Icon</string>
+    <string name="forecast_icon">Forecast Icon</string>
+</resources>
